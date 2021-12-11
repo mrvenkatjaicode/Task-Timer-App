@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tasktimer/homepage.dart';
+
+import 'homepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,8 +15,10 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
       ),
       home: Scaffold(
+        appBar: AppBar(),
         body: HomePage(),
       ),
     );
   }
+ 
 }

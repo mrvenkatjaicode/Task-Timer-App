@@ -1,4 +1,4 @@
-package com.venkat.idea
+package com.example.tasktimer
 
 import io.flutter.embedding.android.FlutterActivity
 
