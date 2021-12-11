@@ -228,15 +228,6 @@ class _FillDetailsState extends State<FillDetails> {
                                       ),
                                     ],
                                   ),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) => HomePage()),
-                                        // );
-                                      },
-                                      child: Text("View"))
                                 ],
                               ),
                             ),
