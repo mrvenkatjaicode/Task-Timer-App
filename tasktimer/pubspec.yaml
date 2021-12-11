@@ -30,8 +30,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl:
   datetime_picker_formfield: ^2.0.0
-  toast:
+  change_app_package_name: ^1.0.0
   http: ^0.13.3
+  localstorage: ^4.0.0+1
+  shared_preferences: any
+  firebase_database: ^8.0.1
+  firebase_core: ^1.8.0
+  # add this line to your dependencies
+  toast: ^0.1.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tasktimer">
+    package="com.venkat.idea">
    <application
         android:label="tasktimer"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launch_background">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
