@@ -1,101 +1,24 @@
-import 'dart:convert';
+import 'dart:async';
+
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import 'package:flutter/material.dart';
-import 'package:localstorage/localstorage.dart';
-import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:tasktimer/fill_details.dart';
 import 'package:tasktimer/show_page.dart';
 
 import 'datamodel.dart';
 
 class HomePage extends StatefulWidget {
-  // var title;
-  // var description;
-  // var datetime;
-  // HomePage(this.title, this.description, this.datetime);
   @override
-  _HomePageState createState() => _HomePageState(
-      // title,
-      // description,
-      // datetime,
-      );
-}
-
-final LocalStorage storage = new LocalStorage('todo_app');
-
-class TodoItem {
-  String title;
-  var description;
-  var timedate;
-  bool done;
-  TodoItem(
-      {required this.title,
-      this.description,
-      this.timedate,
-      required this.done});
-
-  toJSONEncodable() {
-    Map<String, dynamic> m = new Map();
-
-    m['title'] = title;
-    m['refid'] = description;
-    m['amount'] = timedate;
-    m['done'] = done;
-
-    return m;
-  }
-}
-
-class TodoList {
-  List<TodoItem> items = [];
-
-  toJSONEncodable() {
-    return items.map((item) {
-      return item.toJSONEncodable();
-    }).toList();
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  // var tit;
-  // var des;
-  // var dat;
-  // var sampleid;
   List<Data> dataList = [];
-
-  final TodoList list = new TodoList();
-  bool initialized = false;
-
-  // _HomePageState(this.tit, this.des, this.dat);
-
-  _toggleItem(TodoItem item) {
-    setState(() {
-      item.done = !item.done;
-      _saveToStorage();
-    });
-  }
-
-  // _addItem(name) {
-  //   setState(() {
-  //     final item = new TodoItem(
-  //         title: tit, description: des, timedate: dat, done: false);
-  //     list.items.add(item);
-  //     _saveToStorage();
-  //   });
-  // }
-
-  _saveToStorage() {
-    storage.setItem('todos', list.toJSONEncodable());
-  }
-
-  _clearStorage() async {
-    await storage.clear();
-
-    setState(() {
-      list.items = storage.getItem('todos') ?? [];
-    });
-  }
+  final format = DateFormat("HH:mm:ss");
 
   void initState() {
     super.initState();
@@ -113,6 +36,10 @@ class _HomePageState extends State<HomePage> {
           values[key]['datetime'],
         );
         dataList.add(data);
+        print(values[key]['datetime'][0]);
+        print(values[key]['datetime'][1]);
+        print(values[key]['datetime'][2]);
+        print(values[key]['datetime'][3]);
       }
       setState(() {});
     });
@@ -131,14 +58,9 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         padding: EdgeInsets.all(10),
         constraints: BoxConstraints.expand(),
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, index) {
-            if (dataList.length == 0) {
-              Center(
-                child:
-                    Text("No Datas Found Click Below Button to add new tasks"),
-              );
-            }
+        child: FirebaseAnimatedList(
+          query: databaseRef,
+          itemBuilder: (context, snapshot, animation, index) {
             return Column(
               children: [
                 GestureDetector(
@@ -158,21 +80,25 @@ class _HomePageState extends State<HomePage> {
                       backgroundImage: NetworkImage(
                           "https://raw.githubusercontent.com/mrvenkatjaicode/Image/main/Whatsapp/playstore.png"),
                     ),
-                    title: Text(dataList[index].title),
-                    // subtitle: Text(dataList[index].description),
-                    trailing: Text(dataList[index].datetime),
+                    title: Text(snapshot.value['title']),
+                    subtitle: Text(snapshot.value['datetime']),
+                    trailing: IconButton(
+                      onPressed: () {
+                        updateDialog(
+                            snapshot.value['title'],
+                            snapshot.value['description'],
+                            snapshot.value['datetime'],
+                            context,
+                            snapshot.key);
+                      },
+                      icon: Icon(Icons.edit),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
+                SizedBox(height: 5),
               ],
             );
           },
-          itemCount: dataList.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.all(5),
-          scrollDirection: Axis.vertical,
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -189,5 +115,74 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> updateDialog(
+      String title, description, time, BuildContext context, var key) {
+    final titlecontroller = TextEditingController(text: title);
+    final descriptioncontroller = TextEditingController(text: description);
+    final datetimecontroller = TextEditingController(text: time);
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Update Value"),
+            content: Column(
+              children: [
+                TextField(
+                  controller: titlecontroller,
+                  decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Enter your Title"),
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: descriptioncontroller,
+                  decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Enter your Description"),
+                ),
+                DateTimeField(
+                  controller: datetimecontroller,
+                  format: format,
+                  decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: "Enter your Time"),
+                  onShowPicker: (context, currentValue) async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.fromDateTime(
+                          currentValue ?? DateTime.now()),
+                    );
+                    return DateTimeField.convert(time);
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    UpdateData(titlecontroller.text, descriptioncontroller.text,
+                        datetimecontroller.text, key);
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Update")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Cancel")),
+            ],
+          );
+        });
+  }
+
+  void UpdateData(String title, description, time, var key) {
+    Map<String, String> x = {
+      "title": title,
+      "description": description,
+      "datetime": time
+    };
+    databaseRef.child(key).update(x);
   }
 }

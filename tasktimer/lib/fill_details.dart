@@ -14,10 +14,15 @@ class FillDetails extends StatefulWidget {
   _FillDetailsState createState() => _FillDetailsState();
 }
 
+final databaseRef = FirebaseDatabase.instance.reference().child("timerapp");
+final Future<FirebaseApp> _future = Firebase.initializeApp();
+// ignore: top_level_function_literal_block
+final vvm = databaseRef.once().then((DataSnapshot dataSnapshot) {
+  print('${dataSnapshot.key}');
+});
+
 class _FillDetailsState extends State<FillDetails> {
   // ignore: deprecated_member_use
-  final databaseRef = FirebaseDatabase.instance.reference().child("timerapp");
-  final Future<FirebaseApp> _future = Firebase.initializeApp();
 
   void addData(
     String title,
@@ -42,7 +47,7 @@ class _FillDetailsState extends State<FillDetails> {
   final titlecontroller = TextEditingController();
   final descriptioncontroller = TextEditingController();
   final datetimecontroller = TextEditingController();
-  final format = DateFormat("HH:mm");
+  final format = DateFormat("HH:mm:ss");
 
   @override
   Widget build(BuildContext context) {
