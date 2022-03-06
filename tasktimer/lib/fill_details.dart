@@ -14,6 +14,9 @@ class FillDetails extends StatefulWidget {
   _FillDetailsState createState() => _FillDetailsState();
 }
 
+final doctordata = FirebaseDatabase.instance.reference().child("doctordata");
+final patientdata = FirebaseDatabase.instance.reference().child("patientdata");
+
 final databaseRef = FirebaseDatabase.instance.reference().child("timerapp");
 final Future<FirebaseApp> _future = Firebase.initializeApp();
 // ignore: top_level_function_literal_block

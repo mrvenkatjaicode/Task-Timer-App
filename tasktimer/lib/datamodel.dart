@@ -55,3 +55,14 @@ class Data {
   String title, description, datetime;
   Data(this.title, this.description, this.datetime);
 }
+
+class DoctorData {
+  String dname, dmail, dphone, dspealist, dabout, daddress;
+  DoctorData(this.dname, this.dmail, this.dphone, this.dspealist, this.dabout,
+      this.daddress);
+}
+class PatientData {
+  String pname, pphone, pdisease, pabout, paddress;
+  PatientData(this.pname,  this.pphone, this.pdisease, this.pabout,
+      this.paddress);
+}

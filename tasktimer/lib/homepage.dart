@@ -36,10 +36,6 @@ class _HomePageState extends State<HomePage> {
           values[key]['datetime'],
         );
         dataList.add(data);
-        print(values[key]['datetime'][0]);
-        print(values[key]['datetime'][1]);
-        print(values[key]['datetime'][2]);
-        print(values[key]['datetime'][3]);
       }
       setState(() {});
     });

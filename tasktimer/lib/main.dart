@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:tasktimer/homepage.dart';
+
+import 'admin/add_doctors_details.dart';
+import 'admin/admin_homepage.dart';
+import 'login_screens/login.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+            foregroundColor: Colors.white,
+            // ignore: deprecated_member_use
+            backgroundColor: Color(0xfff7892b),
+            iconTheme: IconThemeData(color: Colors.white)),
+        primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        body: HomePage(),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: const MainLoginScreen(),
     );
   }
 }
