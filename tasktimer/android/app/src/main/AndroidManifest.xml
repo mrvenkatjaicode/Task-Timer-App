@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.venkat.idea">
    <application
-        android:label="tasktimer"
-        android:icon="@mipmap/launch_background">
+        android:label="Care Health"
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
